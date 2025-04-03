@@ -34,13 +34,11 @@ function mousePressed() {
 // On Mobile handler
 function touchStarted() {
     toogleNoise();
-    background(50,0,0);
 }
 
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    background(0);
 
     noiseObj = new p5.Noise(types[currentType]);
     noiseObj.amp(MIN_AMP);
@@ -48,9 +46,14 @@ function setup() {
     if(isPlaying) {
         noiseObj.start();
     }
+
+    // Set text properties
+    textSize(22);
+    fill('grey');
 }
 
-function draw() {  
+function draw() {
+    background(0); 
     if ((millis() / 1000) <= DURATION) {
         // Let s draw the waves function: https://www.desmos.com/calculator/rigtehaq9u
         let mapValue = exp(sin(0.01 * frameCount)) - exp(1)/2;
@@ -58,8 +61,15 @@ function draw() {
 
         // Change volume every frame
         noiseObj.amp(currentAmp);
+
+        if (isPlaying) {
+            text("Noise: " + types[currentType], 6, 20);
+        } else {
+            text("Paused", 6, 20);
+        }
     } else {
         // Timer elapsed -> turn it off
+        text("Stopped", 6, 20);
         noiseObj.stop();
         noLoop();
     }
