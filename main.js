@@ -11,8 +11,10 @@ let noiseObj;
 let types = ['white', 'pink', 'brown'];
 let currentType = PINK;
 let isPlaying = false;
+let noSleep;
+let toggleSleep = true;
 
-function toogleNoise() {
+function toggleNoise() {
     // Start / Stop the noise at each touch
     isPlaying = (isPlaying) ? false : true;
 
@@ -24,16 +26,21 @@ function toogleNoise() {
     } else {
         noiseObj.stop();
     }
+
+    if (toggleSleep) {
+        noSleep.enable();
+        toggleSleep = false;
+    }
 }
 
 // On PC handler
 function mousePressed() {
-    toogleNoise();
+    toggleNoise();
 }
 
 // On Mobile handler
 function touchStarted() {
-    toogleNoise();
+    toggleNoise();
 }
 
 
@@ -42,6 +49,8 @@ function setup() {
 
     noiseObj = new p5.Noise(types[currentType]);
     noiseObj.amp(MIN_AMP);
+
+    noSleep = new NoSleep();
 
     if(isPlaying) {
         noiseObj.start();
