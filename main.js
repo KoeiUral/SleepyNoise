@@ -9,8 +9,8 @@ const DURATION = 3600;  // Noise duration in seconds, after one hour it turns of
 
 let noiseObj;
 let types = ['white', 'pink', 'brown'];
-let currentType = BROWN;
-let isPlaying = true;
+let currentType = PINK;
+let isPlaying = false;
 
 function toogleNoise() {
     // Start / Stop the noise at each touch
@@ -34,6 +34,7 @@ function mousePressed() {
 // On Mobile handler
 function touchStarted() {
     toogleNoise();
+    background(50,0,0);
 }
 
 
