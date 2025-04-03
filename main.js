@@ -12,7 +12,7 @@ let types = ['white', 'pink', 'brown'];
 let currentType = BROWN;
 let isPlaying = true;
 
-function mousePressed() {
+function toogleNoise() {
     // Start / Stop the noise at each touch
     isPlaying = (isPlaying) ? false : true;
 
@@ -25,6 +25,17 @@ function mousePressed() {
         noiseObj.stop();
     }
 }
+
+// On PC handler
+function mousePressed() {
+    toogleNoise();
+}
+
+// On Mobile handler
+function touchStarted() {
+    toogleNoise();
+}
+
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
