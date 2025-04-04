@@ -108,7 +108,7 @@ function draw() {
         else if (isPlaying) {
             text(types[currentType] + " noise: " + zStr, windowWidth / 2, windowHeight / 2);
         } else {
-            text("Paused", windowWidth / 2, windowHeight / 2);
+            text("paused", windowWidth / 2, windowHeight / 2);
         }
 
         if ((frameCount % 30) == 0) {
