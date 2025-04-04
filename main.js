@@ -6,15 +6,27 @@ const MIN_AMP = 0.1;
 const MAX_AMP = 0.4;
 
 const DURATION = 3600;  // Noise duration in seconds, after one hour it turns off
+const CUT_FREQ = 600;
+const FILTER_RES = 3;
+
 const FONT_PATH = "C64_Pro_Mono-STYLE.ttf";
 
 let noiseObj;
+let lowFilter;
+let noSleep;
+
 let types = ['white', 'pink', 'brown'];
 let currentType = BROWN;
 let isPlaying = false;
-let noSleep;
+let isFilterOn = false;
 let isStarted = false;
 let myFont;
+let zStr = "zzz";
+let zIndex = 0;
+
+String.prototype.replaceAt = function(index, replacement) {
+    return this.substring(0, index) + replacement + this.substring(index + replacement.length);
+}
 
 function preload() {
     myFont = loadFont(FONT_PATH);
@@ -55,7 +67,17 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
 
     noiseObj = new p5.Noise(types[currentType]);
+    lowFilter = new p5.LowPass();
+
     noiseObj.amp(MIN_AMP);
+    lowFilter.freq(CUT_FREQ);
+    lowFilter.res(FILTER_RES);
+
+    if (isFilterOn) {
+        noiseObj.disconnect();
+        noiseObj.connect(lowFilter);
+        lowFilter.connect();
+    }
 
     noSleep = new NoSleep();
 
@@ -81,16 +103,22 @@ function draw() {
         noiseObj.amp(currentAmp);
 
         if (isStarted === false) {
-            text("Click to start", windowWidth / 2, windowHeight / 2);
+            text("click to start", windowWidth / 2, windowHeight / 2);
         }
         else if (isPlaying) {
-            text("Noise: " + types[currentType], windowWidth / 2, windowHeight / 2);
+            text(types[currentType] + " noise: " + zStr, windowWidth / 2, windowHeight / 2);
         } else {
             text("Paused", windowWidth / 2, windowHeight / 2);
         }
+
+        if ((frameCount % 30) == 0) {
+            zStr = zStr.replaceAt(zIndex, "z");
+            zIndex = (zIndex + 1) % 3;
+            zStr = zStr.replaceAt(zIndex, "Z");
+        }
     } else {
         // Timer elapsed -> turn it off
-        text("Stopped", windowWidth / 2, windowHeight / 2);
+        text("stopped", windowWidth / 2, windowHeight / 2);
         noiseObj.stop();
         noLoop();
     }
