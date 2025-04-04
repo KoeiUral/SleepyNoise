@@ -6,13 +6,20 @@ const MIN_AMP = 0.1;
 const MAX_AMP = 0.4;
 
 const DURATION = 3600;  // Noise duration in seconds, after one hour it turns off
+const FONT_PATH = "C64_Pro_Mono-STYLE.ttf";
 
 let noiseObj;
 let types = ['white', 'pink', 'brown'];
-let currentType = PINK;
+let currentType = BROWN;
 let isPlaying = false;
 let noSleep;
-let toggleSleep = true;
+let isStarted = false;
+let myFont;
+
+function preload() {
+    myFont = loadFont(FONT_PATH);
+
+}
 
 function toggleNoise() {
     // Start / Stop the noise at each touch
@@ -20,16 +27,16 @@ function toggleNoise() {
 
     // Change type of noise at each start up
     if(isPlaying) {
-        currentType = (currentType + 1) % types.length;
-        noiseObj.setType(types[currentType]);
+        //currentType = (currentType + 1) % types.length;
+        //noiseObj.setType(types[currentType]);
         noiseObj.start();
     } else {
         noiseObj.stop();
     }
 
-    if (toggleSleep) {
+    if (isStarted === false) {
         noSleep.enable();
-        toggleSleep = false;
+        isStarted = true;
     }
 }
 
@@ -57,7 +64,9 @@ function setup() {
     }
 
     // Set text properties
+    textFont(myFont);
     textSize(22);
+    textAlign(CENTER);
     fill('grey');
 }
 
@@ -71,14 +80,17 @@ function draw() {
         // Change volume every frame
         noiseObj.amp(currentAmp);
 
-        if (isPlaying) {
-            text("Noise: " + types[currentType], 6, 20);
+        if (isStarted === false) {
+            text("Click to start", windowWidth / 2, windowHeight / 2);
+        }
+        else if (isPlaying) {
+            text("Noise: " + types[currentType], windowWidth / 2, windowHeight / 2);
         } else {
-            text("Paused", 6, 20);
+            text("Paused", windowWidth / 2, windowHeight / 2);
         }
     } else {
         // Timer elapsed -> turn it off
-        text("Stopped", 6, 20);
+        text("Stopped", windowWidth / 2, windowHeight / 2);
         noiseObj.stop();
         noLoop();
     }
